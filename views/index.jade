@@ -1,0 +1,19 @@
+﻿extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  div#editorButtons
+    div
+        a(onclick='highlightQuestions()') Scan Now
+    div
+      select(style='width:70%' name='sometext' size='10' onchange='selectionChanged(this.selectedIndex)')#listFoundQuestions
+  input#resultWidth(type="number" min=50 step=10 value="200" onchange="updateResultSize()")
+  input#resultHeight(type="number" min=50 step=10 value="200" onchange="updateResultSize()")
+  div#editorWrapper
+    textarea#editorArea
+  br
+  div
+    div#resultArea.editable
+  div#resultScreen
+    canvas(style='display:none;')#drawerCanvas
