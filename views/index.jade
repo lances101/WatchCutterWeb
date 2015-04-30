@@ -1,19 +1,50 @@
 ﻿extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  div#editorButtons
-    div
-        a(onclick='highlightQuestions()') Scan Now
-    div
-      select(style='width:70%' name='sometext' size='10' onchange='selectionChanged(this.selectedIndex)')#listFoundQuestions
-  input#resultWidth(type="number" min=50 step=10 value="200" onchange="updateResultSize()")
-  input#resultHeight(type="number" min=50 step=10 value="200" onchange="updateResultSize()")
-  div#editorWrapper
-    textarea#editorArea
-  br
-  div
-    div#resultArea.editable
-  div#resultScreen
-    canvas(style='display:none;')#drawerCanvas
+  div#editorButtons.panel.panel-default.col-md-4
+    div.panel.panel-group(style="text-align:center")
+      div.panel-heading
+        h4 WatchCutter Controls
+      div.panel.panel-group
+        div.panel-heading
+          h4 Storage settings
+        div
+          button(type="button" onclick='saveSettings()' style="width:45%").btn.btn-info.btnMargin Save Settings
+          button(type="button" onclick='loadSettings()' style="width:45%" ).btn.btn-warning.btnMargin Reload Settings
+      div.panel.panel-group
+        div.panel-heading
+          h4 Output settings
+        input#resultWidth(type="text" onchange="updateResultSize()").spinnerSize
+        input#resultHeight(type="text" onchange="updateResultSize()").spinnerSize
+      div
+        //button(type="button" onclick='findQuestions()' style="width:100%").btn.btn-lg.btn-danger Scan Now
+      div.panel.panel-group
+
+      div.panel-heading
+        h4 Cutted Stuff List
+      div.alert.alert-success(style='display:none')
+        strong
+      div(style='overflow-y:scroll; height:300px;'   size='10' onchange='selectionChanged(this.selectedIndex)')#listFoundQuestions.list-group
+  div.col-md-8
+    div.panel.panel-group(style="text-align:right")
+      div.panel-heading
+        h4 Text Editor Area
+      div(style="text-align:right")
+        button(type="button" onclick='').btn.btnMargin Import from File
+        button(type="button" onclick='').btn.btnMargin Import from Clipboard
+        button(type="button" onclick='findQuestions()').btn.btn-danger Scan Now
+
+      div#editorWrapper
+        textarea#editorArea
+          | 1. list-group-item-text
+          | 2. list-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-text
+          | 3. list-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-tex
+
+    button(type="button" onclick='packImagesIntoZip()' style="width:100%;display:none").btn.btn-success#btnDL Download as ZIP
+    div.panel.panel-footer
+
+      div.panel-heading
+        h4 Cutting Results
+
+      div#resultScreen
+      canvas(style='display:none;')#drawerCanvas
