@@ -18,9 +18,15 @@ function saveSettings() {
 function loadSettings() {
     var cook = $.cookie("watchCutterSettings");
     if (cook) {
+
         watchCutterSettings = JSON.parse(cook);
+        console.log("COOKIE GET BABY");
+        console.log($.cookie("watchCutterSettings"));
         $("#resultWidth").val(watchCutterSettings.canvasWidth);
         $("#resultHeight").val(watchCutterSettings.canvasHeight);
+        $('#cpQuestionAnswer').colorpicker('setValue', watchCutterSettings.answerColor);
+        $('#cpQuestionText').colorpicker('setValue', watchCutterSettings.questionColor);
+        $('#cpBackground').colorpicker('setValue', watchCutterSettings.backgroundColor);
     }
 
 }
@@ -33,7 +39,12 @@ function QuestionAnswer() {
     this.answerText = "";
 }
 
+function fontSelectionChanged(val)
+{
+    watchCutterSettings.fontFamily = val;
 
+    selectionChanged(currentlySelected);
+}
 function updateResultSize() {
     watchCutterSettings.canvasWidth = $("#resultWidth").val();
     watchCutterSettings.canvasHeight = $("#resultHeight").val();
@@ -73,11 +84,16 @@ function findQuestions() {
         }
 
     }
-    $(".alert.alert-success").show();
+    shake( $(".alert.alert-success"));
+    $(".alert.alert-success").fadeIn(2000);
     $(".alert.alert-success > strong").text("Found " + questionsFound.length + " questions");
 
     fillQuestionsList();
-    $("#btnDL").show();
+    $("#cuttedStuffDiv").fadeIn();
+    shake($("#btnDL"));
+    $("#btnDL").fadeIn(2000);
+    shake($("#listFoundQuestions"));
+    $("#listFoundQuestions").fadeIn();
 
 }
 function fillQuestionsList() {
@@ -86,12 +102,16 @@ function fillQuestionsList() {
         + i + ")' class='list-group-item questionListElement'>"
         + "<h5 class='list-group-item-heading'>" + ""
         + " Question Length : " + (questionsFound[i].questionEnd - questionsFound[i].start)
+        //+ " | Answer Length : " + (questionsFound[i].end - questionsFound[i].questionEnd)
         + "</h5>" + "<p class='list-group-item-text'>" + questionsFound[i].questionText + "</p>"
         + "</a>");
     }
 }
-
+var currentlySelected;
 function selectionChanged(index) {
+    $("#resultScreen").hide();
+    if(index == null) return;
+    currentlySelected = index;
     $("#listFoundQuestions").children().each(function (cIndex) {
         if (index == cIndex)
             $(this).addClass("active");
@@ -104,10 +124,11 @@ function selectionChanged(index) {
 
     var q = generateImages(questionsFound[index].questionText, watchCutterSettings.questionColor, watchCutterSettings.backgroundColor);
     var a = generateImages(questionsFound[index].answerText, watchCutterSettings.answerColor, watchCutterSettings.backgroundColor);
-    $("#resultScreen").append('<a href="' + q[0] + '"><img src="' + q[0] + '"/></a>');
+    $("#resultScreen").append('<img src="' + q[0] + '"/>');
     for (var i = 0; i < a.length; i++) {
-        $("#resultScreen").append('<a href="' + a[i] + '"><img src="' + a[i] + '"/></a>');
+        $("#resultScreen").append('<img src="' + a[i] + '"/>');
     }
+    $("#resultScreen").fadeIn();
 }
 function packImagesIntoZip() {
     var zip = new JSZip();
@@ -153,7 +174,7 @@ function generateImages(text, textColor, backColor) {
     var context = canvas.getContext('2d');
     context.fillStyle = backColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
-    context.font = '9pt Arial';
+    context.font = watchCutterSettings.fontSize+'pt ' + watchCutterSettings.fontFamily;
     context.fillStyle = textColor;
 
 
@@ -210,17 +231,72 @@ function fillCanvasWithText(context, lines, marginLeft, marginTop, maxWidth, max
     return null;
 }
 
+function shake(div){
+    var interval = 100;
+    var distance = 10;
+    var times = 4;
 
+    $(div).css('position','relative');
+
+    for(var iter=0;iter<(times+1);iter++){
+        $(div).animate({
+            left:((iter%2==0 ? distance : distance*-1))
+        },interval);
+    }
+
+    $(div).animate({ left: 0},interval);
+
+}
 $(window).load(function () {
-    $('.editable').each(function () {
-        this.contentEditable = true;
+
+
+
+    $('.spinWidth .btn:first-of-type').on('click', function() {
+        $('.spinWidth input').val( parseInt($('.spinWidth input').val(), 10) + 10);
+        watchCutterSettings.canvasWidth = $("#resultWidth").val();
+
+    });
+    $('.spinWidth .btn:last-of-type').on('click', function() {
+        $('.spinWidth input').val( parseInt($('.spinWidth input').val(), 10) - 10);
+        watchCutterSettings.canvasWidth = $("#resultWidth").val();
+    });
+
+    $('.spinHeight .btn:first-of-type').on('click', function() {
+        $('.spinHeight input').val( parseInt($('.spinHeight input').val(), 10) + 10);
+        watchCutterSettings.canvasHeight = $("#resultHeight").val();
+
+    });
+    $('.spinHeight .btn:last-of-type').on('click', function() {
+        $('.spinHeight input').val( parseInt($('.spinHeight input').val(), 10) - 10);
+        watchCutterSettings.canvasHeight = $("#resultHeight").val();
+    });
+
+    $('#cpQuestionText').colorpicker().on('changeColor.colorpicker', function(event){
+        $(this).css('background-color', event.color.toHex());
+        watchCutterSettings.questionColor = event.color.toHex()
+        selectionChanged(currentlySelected);
+    });
+    $('#cpQuestionAnswer').colorpicker().on('changeColor.colorpicker', function(event){
+        $(this).css('background-color', event.color.toHex());
+        watchCutterSettings.answerColor = event.color.toHex();
+        selectionChanged(currentlySelected);
+    });
+    $('#cpBackground').colorpicker().on('changeColor.colorpicker', function(event){
+        $(this).css('background-color', event.color.toHex());
+        watchCutterSettings.backgroundColor = event.color.toHex();
+        selectionChanged(currentlySelected);
+    });
+
+    $('.spinFont .btn:first-of-type').on('click', function() {
+        $('.spinFont input').val( parseInt($('.spinFont input').val(), 10) + 1);
+        watchCutterSettings.fontSize = $("#spinnerFont").val();
+
+    });
+    $('.spinFont .btn:last-of-type').on('click', function() {
+        $('.spinFont input').val( parseInt($('.spinFont input').val(), 10) - 1);
+        watchCutterSettings.fontSize = $("#spinnerFont").val();
     });
     loadSettings();
     updateResultSize();
-    $('.spinnerSize').spinedit({
-        minimum: 50,
-        step: 10,
-        value: 200,
-        numberOfDecimals: 0
-    });
+
 });

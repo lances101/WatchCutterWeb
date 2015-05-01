@@ -13,18 +13,73 @@ block content
           button(type="button" onclick='loadSettings()' style="width:45%" ).btn.btn-warning.btnMargin Reload Settings
       div.panel.panel-group
         div.panel-heading
-          h4 Output settings
-        input#resultWidth(type="text" onchange="updateResultSize()").spinnerSize
-        input#resultHeight(type="text" onchange="updateResultSize()").spinnerSize
-      div
-        //button(type="button" onclick='findQuestions()' style="width:100%").btn.btn-lg.btn-danger Scan Now
-      div.panel.panel-group
+          h3 Output settings
+        div.form-inline
+          h4 Output Size
+          div.spreadInLine
+            h5 Width
+            i(class="fa fa-arrows-h fa-lg" style="margin-top:10px")
+            div
 
+              div.input-group.spinner.spinWidth
+                input#resultWidth(type="text" value="200"  onchange="updateResultSize()").form-control
+                div.input-group-btn-vertical
+                  button(class="btn btn-default")
+                    i(class="fa fa-caret-up")
+                  button(class="btn btn-default")
+                    i(class="fa fa-caret-down")
+            h5 Height
+            i(class="fa fa-arrows-v fa-lg" style="margin-top:10px")
+            div
+              div.input-group.spinner.spinHeight
+                input#resultHeight(type="text" value="200" onchange="updateResultSize()").form-control
+                div.input-group-btn-vertical
+                  button(class="btn btn-default")
+                    i(class="fa fa-caret-up")
+                  button(class="btn btn-default")
+                    i(class="fa fa-caret-down")
+      div.form-inline
+        h4 Colors
+        div.spreadInLine
+          div
+            h5 Question Text
+            div(style="margin-top:10px").colorPickerWrapper
+                i(style="background-color:rgb(4,12,13)").colorPickerBox#cpQuestionText
+          div
+            h5 Answer Text
+            div(style="margin-top:10px").colorPickerWrapper
+              i(style="background-color:rgb(4,12,13)").colorPickerBox#cpQuestionAnswer
+        div.spreadInLine
+          div
+            h5 Background
+            div(style="margin-top:10px").colorPickerWrapper
+              i(style="background-color:rgb(4,12,13)").colorPickerBox#cpBackground
+      div.form-inline
+        h4 Font
+        div.spreadInLine
+          h5 Family
+          select.form-control(onchange="fontSelectionChanged(this.value);")
+            option(value="Arial") Arial
+            option(value="Verdana") Verdana
+            option(value="Tahoma") Tahoma
+
+          h5 Size
+          div
+            div.input-group.spinner.spinFont
+              input#spinnerFont(type="text" value="10" onchange="updateFontSize()").form-control
+              div.input-group-btn-vertical
+                button(class="btn btn-default")
+                  i(class="fa fa-caret-up")
+                button(class="btn btn-default")
+                  i(class="fa fa-caret-down")
+    div#cuttedStuffDiv
       div.panel-heading
         h4 Cutted Stuff List
       div.alert.alert-success(style='display:none')
         strong
-      div(style='overflow-y:scroll; height:300px;'   size='10' onchange='selectionChanged(this.selectedIndex)')#listFoundQuestions.list-group
+      div(style='overflow-y:auto; height:300px; display:none;'   size='10' onchange='selectionChanged(this.selectedIndex)')#listFoundQuestions.list-group
+
+
   div.col-md-8
     div.panel.panel-group(style="text-align:right")
       div.panel-heading
@@ -35,10 +90,21 @@ block content
         button(type="button" onclick='findQuestions()').btn.btn-danger Scan Now
 
       div#editorWrapper
-        textarea#editorArea
-          | 1. list-group-item-text
-          | 2. list-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-text
-          | 3. list-group-item-textlist-group-item-textlist-group-item-textlist-group-item-textlist-group-item-tex
+        textarea#editorArea.form-control
+          | 1. list group item text list group item textlist group item text
+          | list group item textlist group item text list group item text list group item text
+          | list group item text
+          | 2. list group item text list group item text list group item text
+          | list group item text list group item text list group item text
+          | list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text
+          | list group item text list group item text list group item text list group item text list group item text list group item text list group item text
+          | list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text
+          | list group item text list group item text list group item text list group item text
+          | list group item text list group item text list group item text list group item text
+          | list group item text list group item text list group item text
+          | list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text list group item text
+          | 3. list-group list group item text  list group item text
+          | list group item text list group item text list group item text list group item text
 
     button(type="button" onclick='packImagesIntoZip()' style="width:100%;display:none").btn.btn-success#btnDL Download as ZIP
     div.panel.panel-footer
