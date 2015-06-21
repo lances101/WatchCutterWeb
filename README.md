@@ -1,4 +1,4 @@
-# WatchCutterWeb ![[hosted here]](http://boromak.com/watchcutter/index.html)
+# WatchCutterWeb [[hosted here]](http://boromak.com/watchcutter/index.html)
 A small tool that converts text into images for mobile devices. 
 
 Initially planned as tool to create cheatsheets for an iPod Nano, support for epub is planned though. 
